@@ -60,19 +60,19 @@
 
 (defun org-github-view-issue ()
   (interactive)
-  (if-let ((a (car (org-property-values "GITHUB_ISSUE"))))
-      (async-shell-command (format "gh issue view %s -c" a))))
+  (if-let ((url (org-entry-get nil "GITHUB_ISSUE")))
+      (async-shell-command (format "gh issue view %s -c" url))))
 
 
 (defun org-github-close-issue ()
   (interactive)
-  (if-let ((url (car (org-property-values "GITHUB_ISSUE"))))
+  (if-let ((url (org-entry-get nil "GITHUB_ISSUE")))
       (async-shell-command (format "gh issue close %s" url))))
 
 
 (defun org-github-reopen-issue ()
   (interactive)
-  (if-let ((url (car (org-property-values "GITHUB_ISSUE"))))
+  (if-let ((url (org-entry-get nil "GITHUB_ISSUE")))
       (async-shell-command (format "gh issue reopen %s" url))))
 
 ;; (process-send-eof
