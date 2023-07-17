@@ -1,0 +1,443 @@
+aaa
+
+冒頭
+
+* TODO 実装テスト2
+SCHEDULED: <2023-07-16 Sun>
+
+これはテストです。
+(org-get-entry) 
+(org-entry-get nil "GITHUB_ISSUE")
+(print (org-gfm-export-as-markdown)  )
+(org-get-heading) 
+(org-heading-components)
+(make-temp-file "./.tmp-org-github")
+
+** この場合は
+
+
+
+* TODO 更新テスト
+:PROPERTIES:
+:GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/1
+:ARCHIVE:  a
+:END:
+
+#+begin_src emacs-lisp
+
+(with-current-buffer (org-pan
+  nil)
+)
+(org-get-heading nil t) ;; タイトルの取得
+(org-gfm-export-as-markdown)  ;; org-modeをに変換
+
+(let ((cur-buf (current-buffer)))
+
+  (with-current-buffer 
+     (point)
+(if-let* ((org-github-current-title (org-get-heading nil t))
+
+  (message org-github-current-title))
+  
+#+end_src
+
+(setq org-github-current-title (org-get-heading nil t))
+(message (org-get-heading nil t))
+(org-heading-components )
+(org-outline-level)
+(org-get-outline-path)
+=issue= 関連の機能は =gh issue= サブコマンドで使用できる。
+
+#+begin_src bash :results raw :wrap example
+gh issue
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Work with GitHub issues.
+
+USAGE
+  gh issue <command> [flags]
+
+GENERAL COMMANDS
+  create:      Create a new issue
+  list:        List issues in a repository
+  status:      Show status of relevant issues
+
+TARGETED COMMANDS
+  close:       Close issue
+  comment:     Add a comment to an issue
+  delete:      Delete issue
+  develop:     Manage linked branches for an issue
+  edit:        Edit issues
+  lock:        Lock issue conversation
+  pin:         Pin a issue
+  reopen:      Reopen issue
+  transfer:    Transfer issue to another repository
+  unlock:      Unlock issue conversation
+  unpin:       Unpin a issue
+  view:        View an issue
+
+FLAGS
+  -R, --repo [HOST/]OWNER/REPO   Select another repository using the [HOST/]OWNER/REPO format
+
+INHERITED FLAGS
+  --help   Show help for command
+
+ARGUMENTS
+  An issue can be supplied as argument in any of the following formats:
+  - by number, e.g. "123"; or
+  - by URL, e.g. "https://github.com/OWNER/REPO/issues/123".
+
+EXAMPLES
+  $ gh issue list
+  $ gh issue create --label bug
+  $ gh issue view 123 --web
+
+LEARN MORE
+  Use 'gh <command> <subcommand> --help' for more information about a command.
+  Read the manual at https://cli.github.com/manual
+
+#+end_example
+
+=issue= を作成する。
+
+#+begin_src bash :results raw :wrap example
+gh issue create --help
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Create an issue on GitHub.
+
+Adding an issue to projects requires authorization with the "project" scope.
+To authorize, run "gh auth refresh -s project".
+
+
+USAGE
+  gh issue create [flags]
+
+FLAGS
+  -a, --assignee login   Assign people by their login. Use "@me" to self-assign.
+  -b, --body string      Supply a body. Will prompt for one otherwise.
+  -F, --body-file file   Read body text from file (use "-" to read from standard input)
+  -l, --label name       Add labels by name
+  -m, --milestone name   Add the issue to a milestone by name
+  -p, --project name     Add the issue to projects by name
+      --recover string   Recover input from a failed run of create
+  -T, --template name    Template name to use as starting body text
+  -t, --title string     Supply a title. Will prompt for one otherwise.
+  -w, --web              Open the browser to create an issue
+
+INHERITED FLAGS
+      --help                     Show help for command
+  -R, --repo [HOST/]OWNER/REPO   Select another repository using the [HOST/]OWNER/REPO format
+
+EXAMPLES
+  $ gh issue create --title "I found a bug" --body "Nothing works"
+  $ gh issue create --label "bug,help wanted"
+  $ gh issue create --label bug --label "help wanted"
+  $ gh issue create --assignee monalisa,hubot
+  $ gh issue create --assignee "@me"
+  $ gh issue create --project "Roadmap"
+
+LEARN MORE
+  Use 'gh <command> <subcommand> --help' for more information about a command.
+  Read the manual at https://cli.github.com/manual
+
+#+end_example
+
+#+begin_src bash :results raw :wrap example
+gh issue create --title "日本語を受け付けるかテストする" --body "こんにちわ"
+#+end_src
+
+#+begin_example
+https://github.com/TakesxiSximada/example/issues/1
+#+end_example
+
+issueが正常に作成できた。成功するとissueのURLが標準出力に表示される。
+
+作成済みのissueのタイトルや概要を変更するには =gh issue edit= を使用する。
+
+#+begin_src bash :results raw :wrap example
+gh issue edit --help
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Edit one or more issues within the same repository.
+
+Editing issues' projects requires authorization with the "project" scope.
+To authorize, run "gh auth refresh -s project".
+
+
+USAGE
+  gh issue edit {<numbers> | <urls>} [flags]
+
+FLAGS
+      --add-assignee login      Add assigned users by their login. Use "@me" to assign yourself.
+      --add-label name          Add labels by name
+      --add-project name        Add the issue to projects by name
+  -b, --body string             Set the new body.
+  -F, --body-file file          Read body text from file (use "-" to read from standard input)
+  -m, --milestone name          Edit the milestone the issue belongs to by name
+      --remove-assignee login   Remove assigned users by their login. Use "@me" to unassign yourself.
+      --remove-label name       Remove labels by name
+      --remove-project name     Remove the issue from projects by name
+  -t, --title string            Set the new title.
+
+INHERITED FLAGS
+      --help                     Show help for command
+  -R, --repo [HOST/]OWNER/REPO   Select another repository using the [HOST/]OWNER/REPO format
+
+EXAMPLES
+  $ gh issue edit 23 --title "I found a bug" --body "Nothing works"
+  $ gh issue edit 23 --add-label "bug,help wanted" --remove-label "core"
+  $ gh issue edit 23 --add-assignee "@me" --remove-assignee monalisa,hubot
+  $ gh issue edit 23 --add-project "Roadmap" --remove-project v1,v2
+  $ gh issue edit 23 --milestone "Version 1"
+  $ gh issue edit 23 --body-file body.txt
+  $ gh issue edit 23 34 --add-label "help wanted"
+
+LEARN MORE
+  Use 'gh <command> <subcommand> --help' for more information about a command.
+  Read the manual at https://cli.github.com/manual
+
+#+end_example
+
+#+begin_src bash :results raw :wrap example
+gh issue edit 1 --title "issueの更新をテストする"
+#+end_src
+
+概要は幾つかの方法で指定できる。
+
+=--body= (又は =-b=) オプションの引数として指定する場合、次のようになる。
+
+```
+gh issue edit 1 --body "tes\nting"
+```
+
+概要の文中に改行を含める場合、 =\n= のような文字を設定するとバックスラッシュ自体もエスケープ処理されて本文中に表示される事になった。もしかしたら改行させる方法はあるのかもしれないけれど見付けられなかった。
+
+改行文字を含んだり長文を書いたりする場合は、一度ファイルとして書き出し =--body-file= (又は =-F= )の引数に書き出したファイルへのパスを指定する方法が良さそうだった。
+
+
+```
+gh issue edit 1 --body-file text.md
+```
+
+helpによると =--body-file= に =-= を指定すると、標準入力からデータを読み取る。
+
+```
+gh issue edit 1 --body-file - < text.md
+```
+
+このいずれかの方法で、概要の更新ができる。
+
+
+#+begin_src bash :results raw :wrap example
+gh issue comment --help
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Add a comment to a GitHub issue.
+
+Without the body text supplied through flags, the command will interactively
+prompt for the comment text.
+
+
+USAGE
+  gh issue comment {<number> | <url>} [flags]
+
+FLAGS
+  -b, --body text        The comment body text
+  -F, --body-file file   Read body text from file (use "-" to read from standard input)
+      --edit-last        Edit the last comment of the same author
+  -e, --editor           Skip prompts and open the text editor to write the body in
+  -w, --web              Open the web browser to write the comment
+
+INHERITED FLAGS
+      --help                     Show help for command
+  -R, --repo [HOST/]OWNER/REPO   Select another repository using the [HOST/]OWNER/REPO format
+
+EXAMPLES
+  $ gh issue comment 12 --body "Hi from GitHub CLI"
+
+LEARN MORE
+  Use 'gh <command> <subcommand> --help' for more information about a command.
+  Read the manual at https://cli.github.com/manual
+
+#+end_example
+
+コメントも概要と同様に =--body= と =--body-file= を提供しており、そこにコメントを指定できる。
+
+#+begin_src bash :results raw :wrap example
+gh issue comment 1 --body "こんにちわ"
+#+end_src
+
+
+#+begin_src bash :results raw :wrap example
+gh issue comment 1 --body "テスト"
+#+end_src
+
+コメントを取得するには =gh issue view= を使う。
+
+#+begin_src bash :results raw :wrap example
+gh issue view 1 -c
+#+end_src
+
+ghコマンドは制御文字をを出力し、自分自身で出力に色を付けようとする。最近のコマンドの流行りなのか、このようなコマンドをよく見かける。このような出力の制御は、無効化した状態が初期値であってほしい。 =ls= などのコマンドもそうなっている。 =gh= は有効状態が初期値となっていて、無効化する機能を見付ける事ができなかった。
+
+issueのクローズには =gh issue close= を使う。
+
+#+begin_src bash :results raw :wrap example
+gh issue close --help
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Close issue
+
+USAGE
+  gh issue close {<number> | <url>} [flags]
+
+FLAGS
+  -c, --comment string   Leave a closing comment
+  -r, --reason string    Reason for closing: {completed|not planned}
+
+INHERITED FLAGS
+      --help                     Show help for command
+  -R, --repo [HOST/]OWNER/REPO   Select another repository using the [HOST/]OWNER/REPO format
+
+LEARN MORE
+  Use 'gh <command> <subcommand> --help' for more information about a command.
+  Read the manual at https://cli.github.com/manual
+
+#+end_example
+
+
+#+begin_src bash :results raw :wrap example
+gh issue close 1 -c 'testing'  -r  'not planned'
+#+end_src
+
+
+閉じたissueは =gh issue repen= によって再開できる。
+
+#+begin_src bash :results raw :wrap example
+gh issue reopen --help
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Reopen issue
+
+USAGE
+  gh issue reopen {<number> | <url>} [flags]
+
+FLAGS
+  -c, --comment string   Add a reopening comment
+
+INHERITED FLAGS
+      --help                     Show help for command
+  -R, --repo [HOST/]OWNER/REPO   Select another repository using the [HOST/]OWNER/REPO format
+
+LEARN MORE
+  Use 'gh <command> <subcommand> --help' for more information about a command.
+  Read the manual at https://cli.github.com/manual
+
+#+end_example
+
+#+begin_src bash :results raw :wrap example
+gh issue reopen 1 -c 'yay'
+#+end_src
+
+issueのクローズは2つの理由を付けて閉じる事ができる。
+
+| 値            | 意味           |
+|---------------+----------------|
+| =completed=   | 完了           |
+| =not planned= | 計画しなかった |
+
+これは今まで気が付かなかった。確認するとWeb UIでも確かに2つの理由で閉じる事が出来るようになっていた。
+
+#+begin_src bash
+gh issue edit https://github.com/TakesxiSximada/example/issues/1 --title 'issueの更新をテストする'
+#+end_src
+
+(org-narrow-to-subtree)
+
+#+begin_src emacs-lisp
+(if-let* ((org-github-current-issue-title  
+#+end_src
+
+
+** 作成
+
+
+
+1. org-modeのGITHUB_ISSUE属性がない事を確認する。
+
+   #+begin_src emacs-lisp
+   (org-property-values "GITHUB_ISSUE")
+   #+end_src
+   
+2. 該当の部分をnarrowingする
+
+   #+begin_src emacs-lisp
+   (org-narrow-to-subtree) 
+   #+end_src
+
+   どの階層の見出しをissueの対象とするかを機械的に判断できない。そのため、階層を選択させるように修正する。
+   
+3. gfmに変換する。
+   
+   #+begin_src emacs-lisp
+   (org-gfm-export-as-markdown)
+   #+end_src
+   
+4. 確認バッファを表示する。
+
+   #+begin_src emacs-lisp
+   (yes-or-no-p "Create an issue?")
+   #+end_src
+      
+5. コマンドの発行
+
+   #+begin_src bash
+   gh issue edit 1 --body-file - < text.md
+   gh issue create --title "日本語を受け付けるかテストする" --body-file -
+   #+end_src
+
+
+
+6. 成功したらGITHUB_ISSUE属性にURLを設定する。
+
+
+** 更新
+
+1. org-modeのGITHUB_ISSUE属性がある事を確認する。
+
+** DONE クローズ
+
+1. org-modeのGITHUB_ISSUE属性がある事を確認する。
+1. =gh issue close= を発行する。
+   
+** DONE 最新の状態を表示する
+
+1. org-modeのGITHUB_ISSUE属性がある事を確認する。
+1. =gh issue view= を発行する。(コメント付き)
+
+
+
+   
+* 日本語
+
+(get-text-property 0 'org-todo-head (org-get-heading nil nil))lo
+(org-heading-components)
+(org-outline-level)
+(org-get-outline-path)
+
+(setq foooo (org-get-heading nil nil))
+(type-of ())
+(org-heading-components )
