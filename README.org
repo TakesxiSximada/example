@@ -1,11 +1,10 @@
 
-* TODO org-github-close-issueが正しくissueのURLを取得できていない
+* DONE org-github-close-issueが正しくissueのURLを取得できていない
 :PROPERTIES:
 :GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/5
 :END:
 
 org-github-close-issueを実行すると、そのorgファイルの一番最後のGITHUB_ISSUEを取得しクローズしてしまう。
-
 
 * TODO 動作確認する
 SCHEDULED: <2023-07-17 Mon>
@@ -14,7 +13,7 @@ SCHEDULED: <2023-07-17 Mon>
 :GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/4
 :END:
 
-
+(org-entry-get nil "GITHUB_ISSUE")
 
 * TODO 実装テスト2
 SCHEDULED: <2023-07-16 Sun>
