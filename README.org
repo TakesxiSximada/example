@@ -1,6 +1,20 @@
-aaa
 
-冒頭
+* TODO org-github-close-issueが正しくissueのURLを取得できていない
+:PROPERTIES:
+:GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/5
+:END:
+
+org-github-close-issueを実行すると、そのorgファイルの一番最後のGITHUB_ISSUEを取得しクローズしてしまう。
+
+
+* TODO 動作確認する
+SCHEDULED: <2023-07-17 Mon>
+:PROPERTIES:
+:Effort:   12
+:GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/4
+:END:
+
+
 
 * TODO 実装テスト2
 SCHEDULED: <2023-07-16 Sun>
