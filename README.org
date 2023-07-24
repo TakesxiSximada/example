@@ -1,4 +1,16 @@
 
+* TODO 不要な処理を削除する
+:PROPERTIES:
+:GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/10
+:END:
+:LOGBOOK:
+CLOCK: [2023-07-24 Mon 19:24]--[2023-07-24 Mon 19:24] =>  0:00
+:END:
+
+org-github.elにはテストの為に実装したコードがいくつか取り残されている。この部分を削除する。
+
+
+
 * DONE org-github-open-issueでheadingが挿入されない
 :PROPERTIES:
 :GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/9
@@ -33,14 +45,32 @@ org-github-close-issueを実行すると、そのorgファイルの一番最後�
 :GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/4
 :END:
 
-* DONE 動作確認する
+* TODO 更新処理の動作確認をする
 SCHEDULED: <2023-07-17 Mon>
 :PROPERTIES:
 :Effort:   12
 :GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/4
 :END:
 
-(org-entry-get nil "GITHUB_ISSUE")
+
+更新処理を変更したので動作確認をする。
+
+#+begin_src emacs-lisp
+(if-let ((url (org-entry-get nil "GITHUB_ISSUE"))
+         (title (org-get-heading nil t)))
+    (save-excursion
+      (org-gfm-export-as-markdown)
+
+      (let ((proc (make-process :name "*Org Github*"
+                                :buffer "*Org Github*"
+                                :command `("gh" "issue" "edit" ,url "--title" ,title "--body-file" "-" ))))
+        (process-send-region proc (point-min) (point-max))
+        (process-send-eof proc)
+        (process-send-eof proc)))
+  (edit-indirect-save))
+#+end_src
+
+
 
 * DONE 実装テスト2
 SCHEDULED: <2023-07-16 Sun>
