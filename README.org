@@ -1,5 +1,5 @@
 
-* TODO 不要な処理を削除する
+* DONE 不要な処理を削除する
 :PROPERTIES:
 :GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/10
 :END:
