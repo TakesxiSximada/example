@@ -1,3 +1,20 @@
+(defun org-github-open-issue (title)
+  (interactive "MIssue Title: ")
+  (unless (eq major-mode 'org-mode)
+    (error "org-github経由でGithub Issueを作成するにはorg-modeである事が必要です。"))
+
+  (unless (yes-or-no-p (format "「%s」 Ok?" title))
+    (error "Github Issueの作成を中止します。"))
+
+  (org-insert-heading)
+  (insert title)
+
+  (make-process :name "*Org Github*"
+		:buffer "*Org Github*"
+		:command `("gh" "issue" "create" "--body" "writing..." "--title" ,title)
+		:filter (lambda (process output)
+			  (when (string-prefix-p "https://github.com" output)
+			    (org-set-property "GITHUB_ISSUE" output)))))
 (defun org-github-prepare-create-issue ()
   (interactive)
 
