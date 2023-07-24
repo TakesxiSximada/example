@@ -1,12 +1,39 @@
 
+* DONE org-github-open-issueでheadingが挿入されない
+:PROPERTIES:
+:GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/9
+:END:
+
+* DONE org-github-open-issueでheadingが挿入されない
+:PROPERTIES:
+:GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/8
+:END:
+
+
+* DONE org-github-open-issueを実装する
+:PROPERTIES:
+:GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/6
+:END:
+
 * DONE org-github-close-issueが正しくissueのURLを取得できていない
 :PROPERTIES:
 :GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/5
 :END:
 
+(org-github-redner-github-issue)
+(org-gfm-export-as-markdown)
 org-github-close-issueを実行すると、そのorgファイルの一番最後のGITHUB_ISSUEを取得しクローズしてしまう。
+(eq major-mode 'org-mode)
+(progn (org-insert-heading)
+       (insert "日本語のissue")
+       (org-set-property "GITHUB_ISSUE" "https://github.com/TakesxiSximada/example/issues/4"))
 
-* TODO 動作確認する
+* DONE 日本語のissue
+:PROPERTIES:
+:GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/4
+:END:
+
+* DONE 動作確認する
 SCHEDULED: <2023-07-17 Mon>
 :PROPERTIES:
 :Effort:   12
@@ -15,22 +42,21 @@ SCHEDULED: <2023-07-17 Mon>
 
 (org-entry-get nil "GITHUB_ISSUE")
 
-* TODO 実装テスト2
+* DONE 実装テスト2
 SCHEDULED: <2023-07-16 Sun>
 
 これはテストです。
-(org-get-entry) 
+(org-get-entry)
 (org-entry-get nil "GITHUB_ISSUE")
 (print (org-gfm-export-as-markdown)  )
-(org-get-heading) 
+(org-get-heading)
 (org-heading-components)
 (make-temp-file "./.tmp-org-github")
 
-** この場合は
 
 
 
-* TODO 更新テスト
+* DONE 更新テスト
 :PROPERTIES:
 :GITHUB_ISSUE: https://github.com/TakesxiSximada/example/issues/1
 :ARCHIVE:  a
@@ -46,12 +72,12 @@ SCHEDULED: <2023-07-16 Sun>
 
 (let ((cur-buf (current-buffer)))
 
-  (with-current-buffer 
+  (with-current-buffer
      (point)
 (if-let* ((org-github-current-title (org-get-heading nil t))
 
   (message org-github-current-title))
-  
+
 #+end_src
 
 (setq org-github-current-title (org-get-heading nil t))
@@ -381,7 +407,7 @@ gh issue edit https://github.com/TakesxiSximada/example/issues/1 --title 'issue�
 (org-narrow-to-subtree)
 
 #+begin_src emacs-lisp
-(if-let* ((org-github-current-issue-title  
+(if-let* ((org-github-current-issue-title
 #+end_src
 
 
@@ -394,27 +420,27 @@ gh issue edit https://github.com/TakesxiSximada/example/issues/1 --title 'issue�
    #+begin_src emacs-lisp
    (org-property-values "GITHUB_ISSUE")
    #+end_src
-   
+
 2. 該当の部分をnarrowingする
 
    #+begin_src emacs-lisp
-   (org-narrow-to-subtree) 
+   (org-narrow-to-subtree)
    #+end_src
 
    どの階層の見出しをissueの対象とするかを機械的に判断できない。そのため、階層を選択させるように修正する。
-   
+
 3. gfmに変換する。
-   
+
    #+begin_src emacs-lisp
    (org-gfm-export-as-markdown)
    #+end_src
-   
+
 4. 確認バッファを表示する。
 
    #+begin_src emacs-lisp
    (yes-or-no-p "Create an issue?")
    #+end_src
-      
+
 5. コマンドの発行
 
    #+begin_src bash
@@ -435,15 +461,13 @@ gh issue edit https://github.com/TakesxiSximada/example/issues/1 --title 'issue�
 
 1. org-modeのGITHUB_ISSUE属性がある事を確認する。
 1. =gh issue close= を発行する。
-   
+
 ** DONE 最新の状態を表示する
 
 1. org-modeのGITHUB_ISSUE属性がある事を確認する。
 1. =gh issue view= を発行する。(コメント付き)
 
 
-
-   
 * 日本語
 
 (get-text-property 0 'org-todo-head (org-get-heading nil nil))lo
