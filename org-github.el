@@ -15,7 +15,41 @@
 		:filter (lambda (process output)
 			  (when (string-prefix-p "https://github.com" output)
 			    (org-set-property "GITHUB_ISSUE" output)))))
+
+
+(defun org-github-edit-issue ()
+  "Github Issueの更新を開始する"
+  (interactive)
+  (org-mark-subtree)
+  (edit-indirect-region (region-beginning) (region-end) t))
+
+
+
+(defun org-github-edit-issue-save ()
+  "更新したGithub Issueを保存する"
+  (interactive)
+  (if-let ((url (org-entry-get nil "GITHUB_ISSUE"))
+           (title (org-get-heading nil t)))
+      (save-excursion
+	(org-gfm-export-as-markdown)
+
+	(let ((proc (make-process :name "*Org Github*"
+                                  :buffer "*Org Github*"
+                                  :command `("gh" "issue" "edit" ,url "--title" ,title "--body-file" "-" ))))
+          (process-send-region proc (point-min) (point-max))
+          (process-send-eof proc)
+          (process-send-eof proc)))
+    (edit-indirect-commit)))
+
+(defun org-github-yank-url ()
+  "そのorgにひもづくGithub URLをリングバッファにコピーする"
+  (interactive)
+  (if-let ((url (org-entry-get nil "GITHUB_ISSUE")))
+      (kill-new url)))
+
+
 (defun org-github-prepare-create-issue ()
+  "旧関数、issue作成用のbashスクリプトを出力する"
   (interactive)
 
   (org-narrow-to-subtree)
@@ -30,45 +64,6 @@
 	  (insert (with-current-buffer gfm-buf (buffer-string)))
 	  (insert "\nEOF\n"))))
     temp-file))
-
-;; (defun org-github-create-issue ()
-;;   (interactive)
-;;   (if-let ((issue-url (org-entry-get nil "GITHUB_ISSUE")))
-;;       (throw 'org-github-error-already-exist-issue "The issue already exists"))
-
-;;   (let ((org-github-current-title (org-get-heading nil t))
-;; 	(cmd (format "gh issue create --title '%s' --body-file -"
-;; 		     org-github-current-title)))
-;;     (when (yes-or-no-p "OK?")
-;;       (print "OKOHIOGREHOI"))))
-
-
-
-
-;;   (save-excursion
-
-;;     (save-excursion
-;;       (org-gfm-export-as-markdown)  ;; org-modeをmarkdownに変換、バッファも切り替わる
-;;       (let ((win (async-shell-command cmd))
-;; 	    (proc (get-buffer-process (window-buffer win))))
-;; 	(process-send-region proc (point-min) (point-max))
-;; 	(process-send-eof proc)))))
-
-
-
-
-
-
-;;       (process-send-region
-;;        (get-buffer-process
-;; 	(async-shell-command cmd)
-
-;;       (let* ((win (async-shell-command cmd)
-;;     (gh-window (async-shell-command cmd))
-;;           (gh-process (get-buffer-process (window-buffer gh-window)))
-;; 	  (process-send-region gh-process (point-min) (point-max))
-
-
 
 
 (defun org-github-fetch-issue-list ()
@@ -91,11 +86,3 @@
   (interactive)
   (if-let ((url (org-entry-get nil "GITHUB_ISSUE")))
       (async-shell-command (format "gh issue reopen %s" url))))
-
-;; (process-send-eof
-;; (async-shell-command
-;; (get-text
-;;  (org-get-heading t t)
-;;  foooo a
-;;  g
-;; (org-heading-components )
